@@ -20,16 +20,7 @@ public class OrderResponseDto {
 
     private int totalPrice;
 
-    public void setOrderFoodResponseDtoList(List<Food> foodList, List<Integer> quantityList ) {
-        OrderFoodResponseDto orderFoodResponseDto = new OrderFoodResponseDto();
-        for(int i =0; i<foodList.size(); i++){
-            orderFoodResponseDto.setName(foodList.get(i).getName());
-            orderFoodResponseDto.setQuantity(quantityList.get(i));
-            orderFoodResponseDto.setPrice(foodList.get(i).getPrice());
-            this.foods.add(orderFoodResponseDto);
-        }
-    }
-
+    
     public  OrderResponseDto(Order order){
         this.restaurantName = order.getRestaurant().getName();
         this.deliveryFee = order.getDeliveryFee();
