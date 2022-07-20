@@ -25,6 +25,7 @@ public class FoodService {
                 ()-> new NullPointerException("레스트랑이 존재하지 않습니다")
         );
         List<Food>existFoodList = foodRepository.findAllByRestaurant(restaurant);
+        List<String> existFoodNameList = getExistFoodName(existFoodList);
         List<String>foodNameList = new ArrayList<>();
 
         List<Food> foodList = new ArrayList<>();
@@ -32,14 +33,14 @@ public class FoodService {
             if(foodNameList.contains(foodRequestDto.getName())){
                 throw new IllegalArgumentException("입력한 메뉴에서 중복된 메뉴가 존재합니다");
             }
+            if(existFoodNameList.contains(foodRequestDto.getName())){
+                throw new IllegalArgumentException("현재 메뉴와 중복된 메뉴가 존재합니다.");
+            }
             foodNameList.add(foodRequestDto.getName());
             Food food = new Food(foodRequestDto,restaurant);
             int price = food.getPrice();
             if(price<100 || price>1000000|| price%100 !=0){
                 throw new IllegalArgumentException("잘못된 가격입니다.");
-            }
-            if(isExistFoodName(food,existFoodList)){
-                throw new IllegalArgumentException("현재 메뉴와 중복된 메뉴가 존재합니다");
             }
             foodList.add(food);
 
@@ -58,15 +59,12 @@ public class FoodService {
         return foodRepository.findAllByRestaurant(restaurant);
     }
 
-    private boolean isExistFoodName(Food food, List<Food> existFoodList){
-        for(int i =0; i<existFoodList.size(); i++){
-            if(food.getName().equals(existFoodList.get(i).getName())){
-                return true;
-            }
+    private List<String> getExistFoodName(List<Food> existFoodList){
+        List<String> existNameList = new ArrayList<>();
+        for(Food existFood : existFoodList){
+            existNameList.add(existFood.getName());
         }
-        return false;
-
-
+        return existNameList;
     }
 }
 
